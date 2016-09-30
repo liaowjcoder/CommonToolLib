@@ -1,6 +1,8 @@
 package lwj.com.commontolllib.utils.app;
 
+import android.app.ActivityManager;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -10,6 +12,9 @@ import android.os.Vibrator;
 import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.inputmethod.InputMethodManager;
+
+import java.util.List;
+
 /**
  * @作者 廖伟健
  * @创建时间 2016/9/28 10:29
@@ -181,4 +186,42 @@ public class ServiceManagerUtils {
         return inflater;
     }
 
+    /**
+     * 判断当前App是否处于前台
+     *
+     * @param context
+     *
+     * @return 权限：<uses-permission android:name="android.permission.GET_TASKS" />
+     */
+    public static boolean isApplicationBackground(final Context context) {
+        ActivityManager am = (ActivityManager) context
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        @SuppressWarnings("deprecation")
+        List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(1);
+        if (!tasks.isEmpty()) {
+            ComponentName topActivity = tasks.get(0).topActivity;
+            if (!topActivity.getPackageName().equals(context.getPackageName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * 判断当前设备是否为手机
+     *
+     * @param context
+     *
+     * @return
+     */
+    public static boolean isPhone(Context context) {
+        TelephonyManager telephony = (TelephonyManager) context
+                .getSystemService(Context.TELEPHONY_SERVICE);
+        if (telephony.getPhoneType() == TelephonyManager.PHONE_TYPE_NONE) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }

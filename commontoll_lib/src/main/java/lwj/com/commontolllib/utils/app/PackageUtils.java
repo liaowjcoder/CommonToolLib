@@ -1,7 +1,11 @@
 package lwj.com.commontolllib.utils.app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.net.Uri;
+
+import java.io.File;
 
 /**
  * @作者 廖伟健
@@ -11,7 +15,9 @@ import android.content.pm.PackageInfo;
 public class PackageUtils {
     /**
      * app VersionName
+     *
      * @param context
+     *
      * @return
      */
     public static String getAppVerName(Context context) {
@@ -29,7 +35,9 @@ public class PackageUtils {
 
     /**
      * app Ver版本号
+     *
      * @param context
+     *
      * @return
      */
     public static int getAppVerCode(Context context) {
@@ -42,5 +50,22 @@ public class PackageUtils {
             version = 1;
         }
         return version;
+    }
+
+    /**
+     * 安装APK
+     *
+     * @param context
+     * @param file
+     */
+    public static void installApk(Context context, File file) {
+        Intent intent = new Intent();
+        intent.setAction("android.intent.action.VIEW");
+        intent.addCategory("android.intent.category.DEFAULT");
+        intent.setType("application/vnd.android.package-archive");
+        intent.setDataAndType(Uri.fromFile(file),
+                "application/vnd.android.package-archive");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 }
